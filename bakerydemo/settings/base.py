@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "modelcluster",
     "taggit",
+    "wagtail_vector_index",
     "wagtailfontawesomesvg",
     "wagtail_ai",
     # Uncomment to enable django-debug-toolbar
@@ -278,3 +279,30 @@ WAGTAIL_AI = {
 }
 
 WAGTAILIMAGES_IMAGE_FORM_BASE = "bakerydemo.ai_experiments.forms.DescribeImageForm"
+
+WAGTAIL_VECTOR_INDEX = {
+    "CHAT_BACKENDS": {
+        "default": {
+            "CLASS": "wagtail_vector_index.ai_utils.backends.llm.LLMChatBackend",
+            "CONFIG": {
+                "MODEL_ID": "gpt-4-turbo",
+            },
+        },
+    },
+    "EMBEDDING_BACKENDS": {
+        "default": {
+            "CLASS": "wagtail_vector_index.ai_utils.backends.llm.LLMEmbeddingBackend",
+            "CONFIG": {
+                "MODEL_ID": "text-embedding-ada-002",
+                "EMBEDDING_OUTPUT_DIMENSIONS": 1536,
+                "TOKEN_LIMIT": 8192,
+            },
+        }
+    },
+}
+
+WAGTAIL_VECTOR_INDEX_STORAGE_PROVIDERS = {
+    "default": {
+        "STORAGE_PROVIDER": "wagtail_vector_index.storage.numpy.NumpyStorageProvider",
+    }
+}

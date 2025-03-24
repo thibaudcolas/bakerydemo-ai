@@ -9,6 +9,8 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail_vector_index.storage.models import VectorIndexedMixin, EmbeddingField
+
 
 from bakerydemo.base.blocks import BaseStreamBlock
 
@@ -43,7 +45,7 @@ class BlogPageTag(TaggedItemBase):
     )
 
 
-class BlogPage(Page):
+class BlogPage(VectorIndexedMixin, Page):
     """
     A Blog Page
 
@@ -87,6 +89,13 @@ class BlogPage(Page):
 
     search_fields = Page.search_fields + [
         index.SearchField("body"),
+    ]
+
+    embedding_fields = [
+        EmbeddingField("title"),
+        EmbeddingField("subtitle"),
+        EmbeddingField("introduction"),
+        EmbeddingField("body"),
     ]
 
     def authors(self):
@@ -176,7 +185,6 @@ class BlogIndexPage(RoutablePageMixin, Page):
     @route(r"^tags/$", name="tag_archive")
     @route(r"^tags/([\w-]+)/$", name="tag_archive")
     def tag_archive(self, request, tag=None):
-
         try:
             tag = Tag.objects.get(slug=tag)
         except Tag.DoesNotExist:

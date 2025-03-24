@@ -8,6 +8,8 @@ from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail_vector_index.storage.models import VectorIndexedMixin, EmbeddingField
+
 
 from bakerydemo.base.blocks import BaseStreamBlock
 from bakerydemo.locations.choices import DAY_CHOICES
@@ -137,6 +139,12 @@ class LocationPage(Page):
     search_fields = Page.search_fields + [
         index.SearchField("address"),
         index.SearchField("body"),
+    ]
+
+    embedding_fields = [
+        EmbeddingField("title"),
+        EmbeddingField("introduction"),
+        EmbeddingField("body"),
     ]
 
     # Fields to show to the editor in the admin view

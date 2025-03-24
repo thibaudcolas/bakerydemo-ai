@@ -7,6 +7,8 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import DraftStateMixin, Page, RevisionMixin
 from wagtail.search import index
+from wagtail_vector_index.storage.models import VectorIndexedMixin, EmbeddingField
+
 
 from bakerydemo.base.blocks import BaseStreamBlock
 
@@ -157,6 +159,12 @@ class BreadPage(Page):
         index.SearchField("body"),
     ]
 
+    embedding_fields = [
+        EmbeddingField("title"),
+        EmbeddingField("introduction"),
+        EmbeddingField("body"),
+    ]
+
     parent_page_types = ["BreadsIndexPage"]
 
 
@@ -176,7 +184,7 @@ class BreadsIndexPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Landscape mode only; horizontal width between 1000px and " "3000px.",
+        help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
     )
 
     content_panels = Page.content_panels + [

@@ -9,6 +9,8 @@ from wagtail.admin.panels import (
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail_vector_index.storage.models import VectorIndexedMixin, EmbeddingField
+
 
 from bakerydemo.base.blocks import BaseStreamBlock
 
@@ -105,6 +107,15 @@ class RecipePage(Page):
     search_fields = Page.search_fields + [
         index.SearchField("backstory"),
         index.SearchField("body"),
+    ]
+
+    embedding_fields = [
+        EmbeddingField("title"),
+        EmbeddingField("subtitle"),
+        EmbeddingField("introduction"),
+        EmbeddingField("backstory"),
+        EmbeddingField("recipe_headline"),
+        EmbeddingField("body"),
     ]
 
     def authors(self):
