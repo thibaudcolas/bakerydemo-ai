@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "bakerydemo.locations",
     "bakerydemo.recipes",
     "bakerydemo.search",
+    "bakerydemo.ai_experiments",
     "wagtail.embeds",
     "wagtail.sites",
     "wagtail.users",
@@ -268,10 +269,12 @@ WAGTAIL_AI = {
         "vision": {
             "CLASS": "wagtail_ai.ai.openai.OpenAIBackend",
             "CONFIG": {
-                "MODEL_ID": "gpt-4-vision-preview",
+                "MODEL_ID": "gpt-4-turbo",
                 "TOKEN_LIMIT": 300,
             },
         },
     },
     "IMAGE_DESCRIPTION_BACKEND": "vision",
 }
+
+WAGTAILIMAGES_IMAGE_FORM_BASE = "bakerydemo.ai_experiments.forms.DescribeImageForm"
