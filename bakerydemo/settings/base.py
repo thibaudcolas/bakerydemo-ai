@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "modelcluster",
     "taggit",
     "wagtailfontawesomesvg",
+    "wagtail_ai",
     # Uncomment to enable django-debug-toolbar
     # "debug_toolbar",
     "django_extensions",
@@ -253,3 +254,24 @@ if "CSP_DEFAULT_SRC" in os.environ:
         CSP_FRAME_SRC = os.environ.get("CSP_FRAME_SRC").split(",")
     if "CSP_REPORT_URI" in os.environ:
         CSP_REPORT_URI = os.environ.get("CSP_REPORT_URI")
+
+WAGTAIL_AI = {
+    "BACKENDS": {
+        "default": {
+            "CLASS": "wagtail_ai.ai.llm.LLMBackend",
+            "CONFIG": {
+                # Model ID recognizable by the "LLM" library.
+                "MODEL_ID": "gpt-4o",
+                "TOKEN_LIMIT": 8192,
+            },
+        },
+        "vision": {
+            "CLASS": "wagtail_ai.ai.openai.OpenAIBackend",
+            "CONFIG": {
+                "MODEL_ID": "gpt-4-vision-preview",
+                "TOKEN_LIMIT": 300,
+            },
+        },
+    },
+    "IMAGE_DESCRIPTION_BACKEND": "vision",
+}
