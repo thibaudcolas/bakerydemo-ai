@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from taggit.models import Tag, TaggedItemBase
-from wagtail.admin.panels import FieldPanel, MultipleChooserPanel
+from wagtail.admin.panels import FieldPanel, MultipleChooserPanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
@@ -13,6 +13,11 @@ from wagtail_vector_index.storage.models import VectorIndexedMixin, EmbeddingFie
 
 
 from bakerydemo.base.blocks import BaseStreamBlock
+
+from bakerydemo.chrome_ai_experiments.widgets import (
+    TextSummarizeInputWidget,
+    TextSummarizeTextareaWidget,
+)
 
 
 class BlogPersonRelationship(Orderable, models.Model):
@@ -71,8 +76,18 @@ class BlogPage(VectorIndexedMixin, Page):
     date_published = models.DateField("Date article published", blank=True, null=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel("subtitle"),
-        FieldPanel("introduction"),
+        FieldPanel(
+            "subtitle",
+            widget=TextSummarizeInputWidget(
+                summarization_type="headline", length="medium"
+            ),
+        ),
+        FieldPanel(
+            "introduction",
+            widget=TextSummarizeTextareaWidget(
+                summarization_type="teaser", length="short"
+            ),
+        ),
         FieldPanel("image"),
         FieldPanel("body"),
         FieldPanel("date_published"),
@@ -85,6 +100,23 @@ class BlogPage(VectorIndexedMixin, Page):
             min_num=1,
         ),
         FieldPanel("tags"),
+    ]
+
+    # Override widgets for title tag and meta description
+    promote_panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel("slug"),
+                FieldPanel("seo_title"),
+                FieldPanel(
+                    "search_description",
+                    widget=TextSummarizeTextareaWidget(
+                        summarization_type="teaser", length="short"
+                    ),
+                ),
+            ],
+            "For search engines",
+        ),
     ]
 
     search_fields = Page.search_fields + [
