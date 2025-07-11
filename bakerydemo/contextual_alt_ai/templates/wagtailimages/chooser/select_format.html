@@ -1,0 +1,24 @@
+{% load wagtailimages_tags wagtailadmin_tags %}
+{% load i18n static %}
+{% trans "Choose a format" as choose_str %}
+{% include "wagtailadmin/shared/header.html" with title=choose_str %}
+
+<div class="row row-flush nice-padding">
+    <div class="col6">
+        {% image image max-800x600 class="show-transparency" id="chooser-thumbnail" %}
+    </div>
+    <div class="col6">
+        <h2>Contextual Alt Text</h2>
+        <form action="{{ select_format_action_url }}" method="POST" novalidate>
+            {% csrf_token %}
+            {% formattedfield form.format %}
+            {% fragment as alt_text_field %}
+            <input type="text" name="image-chooser-insertion-{{ form.alt_text.name }}" value="{{ form.alt_text.value }}" id="{{ form.alt_text.id_for_label }}" data-controller="contextual-alt" data-contextual-alt-description-value="{{ image.description }}">
+            {% endfragment %}
+            {% formattedfield form.alt_text rendered_field=alt_text_field %}
+            {% formattedfield form.image_is_decorative %}
+            <input type="submit" value="{% trans 'Insert image' %}" class="button" />
+        </form>
+    </div>
+</div>
+<script type="module" src="{% static 'contextual-alt.js' %}"></script>
