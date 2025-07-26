@@ -259,24 +259,46 @@ if "CSP_DEFAULT_SRC" in os.environ:
 
 WAGTAIL_AI = {
     "BACKENDS": {
+        # "default": {
+        #     "CLASS": "wagtail_ai.ai.llm.LLMBackend",
+        #     "CONFIG": {
+        #         # Model ID recognizable by the "LLM" library.
+        #         "MODEL_ID": "gpt-4o",
+        #         "TOKEN_LIMIT": 8192,
+        #     },
+        # },
         "default": {
-            "CLASS": "wagtail_ai.ai.llm.LLMBackend",
+            "CLASS": "bakerydemo.scaleway_ai.scaleway.ScalewayAIBackend",
             "CONFIG": {
-                # Model ID recognizable by the "LLM" library.
-                "MODEL_ID": "gpt-4o",
+                # MODEL_ID should match the model_id in the yaml file.
+                "MODEL_ID": "mistral-small-3.1-24b-instruct-2503",
                 "TOKEN_LIMIT": 8192,
+                "OPENAI_API_KEY": os.environ.get("SCW_SECRET_KEY", ""),
             },
         },
+        # "vision": {
+        #     "CLASS": "wagtail_ai.ai.openai.OpenAIBackend",
+        #     "CONFIG": {
+        #         "MODEL_ID": "gpt-4-turbo",
+        #         "TOKEN_LIMIT": 300,
+        #     },
+        # },
         "vision": {
-            "CLASS": "wagtail_ai.ai.openai.OpenAIBackend",
+            "CLASS": "bakerydemo.scaleway_ai.scaleway.ScalewayAIBackend",
             "CONFIG": {
-                "MODEL_ID": "gpt-4-turbo",
-                "TOKEN_LIMIT": 300,
+                # MODEL_ID should match the model_id in the yaml file.
+                "MODEL_ID": "mistral-small-3.1-24b-instruct-2503",
+                "TOKEN_LIMIT": 8192,
+                "OPENAI_API_KEY": os.environ.get("SCW_SECRET_KEY", ""),
             },
         },
     },
     "IMAGE_DESCRIPTION_BACKEND": "vision",
 }
+
+SCALEWAY_AI_URL = (
+    "https://api.scaleway.ai/31f97d80-8ea0-4740-a2a5-30884af707f5/v1/chat/completions"
+)
 
 WAGTAILIMAGES_IMAGE_FORM_BASE = "bakerydemo.ai_experiments.forms.DescribeImageForm"
 
