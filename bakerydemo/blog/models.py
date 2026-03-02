@@ -11,6 +11,8 @@ from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
 from wagtail_ai.panels import AIMultipleChooserPanel
+from wagtail_periodic_review.models import PeriodicReviewMixin
+
 
 from bakerydemo.base.blocks import BaseStreamBlock
 
@@ -67,7 +69,7 @@ class BlogPageTag(TaggedItemBase):
     )
 
 
-class BlogPage(Page):
+class BlogPage(PeriodicReviewMixin, Page):
     """
     A Blog Page
 
@@ -116,6 +118,7 @@ class BlogPage(Page):
         ),
         FieldPanel("tags"),
     ]
+    settings_panels = PeriodicReviewMixin.review_panels + Page.settings_panels
 
     search_fields = Page.search_fields + [
         index.SearchField("body"),

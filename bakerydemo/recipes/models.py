@@ -10,6 +10,7 @@ from wagtail.api import APIField
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail_periodic_review.models import PeriodicReviewMixin
 
 from bakerydemo.base.blocks import BaseStreamBlock
 
@@ -43,7 +44,7 @@ class RecipePersonRelationship(Orderable, models.Model):
     ]
 
 
-class RecipePage(Page):
+class RecipePage(PeriodicReviewMixin, Page):
     """
     Recipe pages are more complex than blog pages, demonstrating more advanced StreamField patterns.
     """
@@ -107,6 +108,8 @@ class RecipePage(Page):
             max_num=3,
         ),
     ]
+
+    settings_panels = PeriodicReviewMixin.review_panels + Page.settings_panels
 
     search_fields = Page.search_fields + [
         index.SearchField("backstory"),
